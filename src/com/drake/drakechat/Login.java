@@ -1,6 +1,5 @@
 package com.drake.drakechat;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -10,7 +9,8 @@ import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Login extends JFrame {
 
@@ -20,10 +20,10 @@ public class Login extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField txtName;
-	private JTextField textField;
+	private JTextField txtAddress;
 	private JLabel lblAddress;
 	private JLabel lblPort;
-	private JTextField textField_1;
+	private JTextField txtPort;
 
 	public Login() {
 		
@@ -53,10 +53,10 @@ public class Login extends JFrame {
 		lblName.setBounds(122, 40, 55, 15);
 		contentPane.add(lblName);
 		
-		textField = new JTextField();
-		textField.setBounds(67, 142, 165, 28);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		txtAddress = new JTextField();
+		txtAddress.setBounds(67, 142, 165, 28);
+		contentPane.add(txtAddress);
+		txtAddress.setColumns(10);
 		
 		lblAddress = new JLabel("Address:");
 		lblAddress.setBounds(115, 117, 70, 15);
@@ -66,15 +66,30 @@ public class Login extends JFrame {
 		lblPort.setBounds(129, 193, 41, 15);
 		contentPane.add(lblPort);
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(67, 215, 165, 28);
-		contentPane.add(textField_1);
+		txtPort = new JTextField();
+		txtPort.setColumns(10);
+		txtPort.setBounds(67, 215, 165, 28);
+		contentPane.add(txtPort);
 		
 		JButton btnLogin = new JButton("Login");
+		btnLogin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String name = txtName.getText();
+				String address = txtAddress.getText();
+				int port = Integer.parseInt(txtPort.getText());
+				
+				login(name, address, port);
+			}
+		});
 		btnLogin.setBounds(90, 280, 117, 25);
 		contentPane.add(btnLogin);
 		
+	}
+	
+	
+	private void login(String name, String address, int port) {
+		dispose();
+		System.out.println(name + ", " + address + ", " + port);
 	}
 	
 	public static void main(String[] args) {
