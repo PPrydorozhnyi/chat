@@ -42,6 +42,8 @@ public class Client extends JFrame {
 	//UDP
 	private DatagramSocket socket;
 	private InetAddress ip;
+	
+	private Thread send;
 
 	public Client(String name, String address, int port) {
 		
@@ -73,6 +75,25 @@ public class Client extends JFrame {
 		}
 		
 		return true;
+	}
+	
+	// prevent concurrency
+	private void send(final byte[] data) {
+		
+		send = new Thread("send") {
+			@Override
+			public void run() {
+				DatagramPacket packet = new DatagramPacket(data, data.length, ip, port);
+				try {
+					socket.send(packet);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		
+		send.start();
+		
 	}
 	
 private String recieve() {
