@@ -20,6 +20,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 
 public class Client extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -31,6 +35,11 @@ public class Client extends JFrame {
 	private int port;
 	private JTextField txtMessage;
 	private JTextArea history;
+	
+	//Socket for TCP
+	//UDP
+	private DatagramSocket socket;
+	private InetAddress ip;
 
 	public Client(String name, String address, int port) {
 		
@@ -38,8 +47,30 @@ public class Client extends JFrame {
 		this.address = address;
 		this.port = port;
 		
+		boolean connect = openConnection(address, port);
+		
+		if (!connect) {
+			System.out.println("Connection failed!");
+			console("Connection failed!");
+		}
+		
 		createWindow();
 		console("Attempting a connection to " + address + ":" + port + ", user:" + name);
+	}
+	
+	private boolean openConnection(String address,int port) {
+		
+		try {
+			socket = new DatagramSocket(); 
+			ip = InetAddress.getByName(address);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (SocketException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
 	}
 	
 	private void createWindow() {
