@@ -69,10 +69,11 @@ public class Client extends JFrame {
 		GridBagConstraints scrollConstrains = new GridBagConstraints();
 		scrollConstrains.insets = new Insets(0, 0, 5, 5);
 		scrollConstrains.fill = GridBagConstraints.BOTH;
-		scrollConstrains.gridx = 1;
-		scrollConstrains.gridy = 1;
+		scrollConstrains.gridx = 0;
+		scrollConstrains.gridy = 0;
 		// amount of cells which it contains of
-		scrollConstrains.gridwidth = 3;
+		scrollConstrains.gridwidth = 4;
+		scrollConstrains.gridheight = 2;
 		scrollConstrains.insets = new Insets(0, 5, 0, 0);
 		contentPane.add(scroll, scrollConstrains);
 		
@@ -88,8 +89,9 @@ public class Client extends JFrame {
 		GridBagConstraints gbc_txtMessage = new GridBagConstraints();
 		gbc_txtMessage.insets = new Insets(0, 0, 0, 5);
 		gbc_txtMessage.fill = GridBagConstraints.HORIZONTAL;
-		gbc_txtMessage.gridx = 1;
+		gbc_txtMessage.gridx = 0;
 		gbc_txtMessage.gridy = 2;
+		gbc_txtMessage.gridwidth = 2;
 		contentPane.add(txtMessage, gbc_txtMessage);
 		txtMessage.setColumns(10);
 		
