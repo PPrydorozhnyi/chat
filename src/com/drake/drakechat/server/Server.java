@@ -1,11 +1,14 @@
 package com.drake.drakechat.server;
 
+import java.io.IOException;
+import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
 public class Server implements Runnable {
 
 	private DatagramSocket socket;
+	// <1000 problems
 	private int port;
 	private boolean running = false;
 	private Thread run;
@@ -18,15 +21,19 @@ public class Server implements Runnable {
 		this.port = port;
 		
 		try {
-			socket = new DatagramSocket();
+			// open server on port
+			socket = new DatagramSocket(port);
 		} catch(SocketException e) {
 			e.printStackTrace();
 		}
 		run = new Thread(this, "Server");
+		run.start();
 	}
 	
 	public void run() {
 		running = true;
+		
+		System.out.println("Server started on port " + port);
 		
 		manageClients();
 		receive();
@@ -48,15 +55,26 @@ public class Server implements Runnable {
 	
 	private void receive() {
 		
-		receive = new Thread("Receve") {
+		receive = new Thread("Receive") {
 			@Override
 			public void run() {
 				while (running) {
+					byte[] data = new byte[1024];
+					DatagramPacket packet = new DatagramPacket(data, data.length);
+					try {
+					socket.receive(packet);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					String string = new String(packet.getData());
 					
+					System.out.println(string);
 				}
 			}
 		};
+		receive.start();
 		
 	}
+	
 	
 }

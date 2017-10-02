@@ -51,7 +51,7 @@ public class Client extends JFrame {
 		this.address = address;
 		this.port = port;
 		
-		boolean connect = openConnection(address, port);
+		boolean connect = openConnection(address);
 		
 		if (!connect) {
 			System.out.println("Connection failed!");
@@ -59,10 +59,12 @@ public class Client extends JFrame {
 		}
 		
 		createWindow();
-		console("Attempting a connection to " + address + ":" + port + ", user:" + name);
+		console("Attempting a connection to " + address + ": " + port + ", user: " + name);
+		String connection = name + " connected " + address + ":" + port;
+		send(connection.getBytes());
 	}
 	
-	private boolean openConnection(String address,int port) {
+	private boolean openConnection(String address) {
 		
 		try {
 			socket = new DatagramSocket(); 
@@ -78,6 +80,7 @@ public class Client extends JFrame {
 	}
 	
 	// prevent concurrency
+	// send data to server
 	private void send(final byte[] data) {
 		
 		send = new Thread("send") {
@@ -95,8 +98,9 @@ public class Client extends JFrame {
 		send.start();
 		
 	}
-	
-private String recieve() {
+
+	// Receive message from server
+private String receive() {
 		
 		byte[] data = new byte[1024];
 		DatagramPacket packet = new DatagramPacket(data, data.length);
@@ -188,6 +192,7 @@ private String recieve() {
 		
 		message = name + ": " + message;
 		console(message);
+		send(message.getBytes());
 		txtMessage.setText("");
 	}
 	
@@ -197,6 +202,7 @@ private String recieve() {
 		history.append(message + "\n\r");
 		// to update caret position
 		history.setCaretPosition(history.getDocument().getLength());
+		txtMessage.requestFocusInWindow();
 	}
 
 }
