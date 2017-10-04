@@ -74,7 +74,6 @@ public class Server implements Runnable {
 					}
 					process(packet);
 					//TODO check
-					clients.add(new ServerClient("", packet.getAddress(), packet.getPort(), 50));
 					System.out.println(clients.get(0).address + ":" + clients.get(0).port);
 				}
 			}
@@ -85,9 +84,13 @@ public class Server implements Runnable {
 	
 	private void process(DatagramPacket packet) {
 		String string = new String(packet.getData());
+		
 		if (string.startsWith("/c/")) {
-			clients.add(new ServerClient(string.substring(3, string.length()), packet.getAddress(), packet.getPort(), 50));
+			clients.add(new ServerClient(string.substring(3, string.length()), packet.getAddress(),
+					packet.getPort(), UniqueIdentifier.getIdentifier()));
+			
 			System.out.println(string.substring(3, string.length()));
+			System.out.println(clients.get(clients.size() - 1).getID());
 		} else {
 			System.out.println(string);
 		}

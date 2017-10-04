@@ -11,6 +11,8 @@ import javax.swing.JButton;
 import javax.swing.UIManager;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class Login extends JFrame {
 
@@ -42,6 +44,14 @@ public class Login extends JFrame {
 		contentPane.setLayout(null);
 		
 		txtName = new JTextField();
+		txtName.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					sendInfo();
+				}
+			}
+		});
 		txtName.setBounds(67, 67, 165, 28);
 		contentPane.add(txtName);
 		txtName.setColumns(10);
@@ -51,6 +61,14 @@ public class Login extends JFrame {
 		contentPane.add(lblName);
 		
 		txtAddress = new JTextField();
+		txtAddress.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					sendInfo();
+				}
+			}
+		});
 		txtAddress.setBounds(67, 142, 165, 28);
 		contentPane.add(txtAddress);
 		txtAddress.setColumns(10);
@@ -64,6 +82,14 @@ public class Login extends JFrame {
 		contentPane.add(lblPort);
 		
 		txtPort = new JTextField();
+		txtPort.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					sendInfo();
+				}
+			}
+		});
 		txtPort.setColumns(10);
 		txtPort.setBounds(67, 215, 165, 28);
 		contentPane.add(txtPort);
@@ -71,16 +97,20 @@ public class Login extends JFrame {
 		JButton btnLogin = new JButton("Login");
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String name = txtName.getText();
-				String address = txtAddress.getText();
-				int port = Integer.parseInt(txtPort.getText());
-				
-				login(name, address, port);
+				sendInfo();
 			}
 		});
 		btnLogin.setBounds(90, 280, 117, 25);
 		contentPane.add(btnLogin);
 		
+	}
+	
+	private void sendInfo() {
+		String name = txtName.getText();
+		String address = txtAddress.getText();
+		int port = Integer.parseInt(txtPort.getText());
+		
+		login(name, address, port);
 	}
 	
 	
