@@ -62,23 +62,35 @@ public class Server implements Runnable {
 		receive = new Thread("Receive") {
 			@Override
 			public void run() {
+				
+				byte[] data = new byte[1024];
+				DatagramPacket packet = new DatagramPacket(data, data.length);
+				
 				while (running) {
-					byte[] data = new byte[1024];
-					DatagramPacket packet = new DatagramPacket(data, data.length);
 					try {
 					socket.receive(packet);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-					String string = new String(packet.getData());
+					process(packet);
+					//TODO check
 					clients.add(new ServerClient("", packet.getAddress(), packet.getPort(), 50));
 					System.out.println(clients.get(0).address + ":" + clients.get(0).port);
-					System.out.println(string);
 				}
 			}
 		};
 		receive.start();
 		
+	}
+	
+	private void process(DatagramPacket packet) {
+		String string = new String(packet.getData());
+		if (string.startsWith("/c/")) {
+			clients.add(new ServerClient(string.substring(3, string.length()), packet.getAddress(), packet.getPort(), 50));
+			System.out.println(string.substring(3, string.length()));
+		} else {
+			System.out.println(string);
+		}
 	}
 	
 	
