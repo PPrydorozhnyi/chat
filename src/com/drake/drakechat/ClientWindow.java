@@ -13,13 +13,17 @@ import java.awt.event.KeyEvent;
  */
 
 
-public class ClientWindow extends JFrame {
+public class ClientWindow extends JFrame implements Runnable {
 
     private JPanel contentPane;
     private JTextField txtMessage;
     private JTextArea history;
 
     private Client client;
+    private Thread run;
+
+    private Thread listen;
+    private boolean running = false;
 
     ClientWindow(String name, String address, int port) {
 
@@ -36,6 +40,9 @@ public class ClientWindow extends JFrame {
         console("Attempting a connection to " + address + ": " + port + ", user: " + name);
         String connection = "/c/" + name;
         client.send(connection.getBytes());
+
+        run = new Thread(this, "Running");
+        run.start();
     }
 
     private void createWindow() {
@@ -126,6 +133,29 @@ public class ClientWindow extends JFrame {
         // to update caret position
         history.setCaretPosition(history.getDocument().getLength());
         txtMessage.requestFocusInWindow();
+    }
+
+    public void listen() {
+        listen = new Thread("Listen") {
+            @Override
+            public void run() {
+                while (running) {
+                    String message = client.receive();
+                    if (message.startsWith("/c/")) {
+                        client.setID(Integer.parseInt(message.substring(3, message.length())));
+                        console("Successfully connected to the server ID: " + client.getID());
+                    }
+                }
+            }
+
+        };
+        listen.start();
+    }
+
+    @Override
+    public void run() {
+        running = true;
+        listen();
     }
 
 }

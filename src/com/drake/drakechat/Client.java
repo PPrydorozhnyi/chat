@@ -11,6 +11,7 @@ class Client {
     private String address;
     private int port;
 
+    private int ID = -1;
 
     //Socket for TCP
     //UDP
@@ -86,9 +87,14 @@ class Client {
             e.printStackTrace();
         }
 
-        return new String(packet.getData());
+        return new String(packet.getData()).trim();
     }
 
+    public int getID() {
+        return ID;
+    }
 
-
+    public void setID(int ID) {
+        this.ID = ID;
+    }
 }
