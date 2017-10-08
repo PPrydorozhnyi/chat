@@ -120,7 +120,8 @@ public class ClientWindow extends JFrame implements Runnable {
         if ("".equals(message)) return;
 
         message = client.getName() + ": " + message;
-        console(message);
+        //TODO: check if implements TCP
+        //console(message);
         message = "/m/" + message;
         client.send(message.getBytes());
         txtMessage.setText("");
@@ -135,15 +136,19 @@ public class ClientWindow extends JFrame implements Runnable {
         txtMessage.requestFocusInWindow();
     }
 
-    public void listen() {
+    private void listen() {
         listen = new Thread("Listen") {
             @Override
             public void run() {
                 while (running) {
                     String message = client.receive();
+                    //System.out.println(message);
                     if (message.startsWith("/c/")) {
                         client.setID(Integer.parseInt(message.substring(3, message.length())));
                         console("Successfully connected to the server ID: " + client.getID());
+                    } else if (message.startsWith("/m/")) {
+                        String text = message.split("/m/")[1];
+                        console(text);
                     }
                 }
             }
