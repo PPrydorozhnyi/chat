@@ -65,8 +65,8 @@ public class Server implements Runnable {
             @Override
             public void run() {
 
-                byte[] data = new byte[1024];
-                DatagramPacket packet = new DatagramPacket(data, data.length);
+                byte[] data;
+                DatagramPacket packet;
 
                 while (running) {
                     data = new byte[1024];
@@ -78,7 +78,7 @@ public class Server implements Runnable {
                     }
                     process(packet);
                     //TODO check
-                    System.out.println(clients.get(0).address + ":" + clients.get(0).port);
+                    //System.out.println(clients.get(0).address + ":" + clients.get(0).port);
                 }
             }
         };
@@ -110,11 +110,36 @@ public class Server implements Runnable {
         } else if (string.startsWith("/m/")) {
 
             sendToAll(string);
-            System.out.println(string.substring(3, string.length()));
-
+            System.out.println("Server: " + string.substring(3, string.length()) + "\n\r");
+        } else if (string.startsWith("/d/")) {
+            String id = string.split("/d/")[1];
+            disconnect(Integer.parseInt(id), true);
         } else {
             System.out.println(string);
         }
+    }
+
+    private void disconnect(int id, boolean status) {
+        ServerClient c = null;
+        for (int i = 0; i < clients.size(); i++) {
+            if (clients.get(i).getID() == id) {
+                c = clients.get(i);
+                clients.remove(i);
+                break;
+            }
+        }
+
+        String message;
+        if (status)
+            message = "Client " + c.name + " (" + c.getID() + ")" +
+                    c.address + ":" + c.port + " disconnected";
+        else
+            message = "Client " + c.name + " (" + c.getID() + ")" +
+                    c.address + ":" + c.port + " timed out";
+
+        System.out.println(message);
+        sendToAll("/m/" + message);
+
     }
 
     private void send(byte[] data, InetAddress address, int port) {

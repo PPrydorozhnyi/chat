@@ -3,10 +3,7 @@ package com.drake.drakechat;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.io.UnsupportedEncodingException;
 
 /**
@@ -88,7 +85,7 @@ public class ClientWindow extends JFrame implements Runnable {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    send(txtMessage.getText());
+                    send(txtMessage.getText(), true);
                 }
             }
         });
@@ -105,7 +102,7 @@ public class ClientWindow extends JFrame implements Runnable {
         JButton btnSend = new JButton("Send");
         btnSend.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                send(txtMessage.getText());
+                send(txtMessage.getText(), true);
             }
         });
         GridBagConstraints gbc_btnSend = new GridBagConstraints();
@@ -113,20 +110,34 @@ public class ClientWindow extends JFrame implements Runnable {
         gbc_btnSend.gridx = 3;
         gbc_btnSend.gridy = 2;
         contentPane.add(btnSend, gbc_btnSend);
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                String disconnect = "/d/" + client.getID();
+                send(disconnect, false);
+                running = false;
+                //client.close();
+            }
+        });
+
         setVisible(true);
 
         txtMessage.requestFocusInWindow();
         //TODO: add smiles button(7)
     }
 
-    private void send(String message) {
+    private void send(String message, boolean text) {
 
         if ("".equals(message)) return;
 
-        message = client.getName() + ": " + message;
         //TODO: check if implements TCP
         //console(message);
-        message = "/m/" + message;
+        if (text) {
+            message = client.getName() + ": " + message;
+            message = "/m/" + message;
+        }
+
         try {
             client.send(message.getBytes("UTF-8"));
         } catch (UnsupportedEncodingException e) {

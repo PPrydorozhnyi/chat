@@ -76,6 +76,17 @@ class Client {
 
     }
 
+    public void close() {
+        new Thread(() -> {
+            // no one can access socket
+            synchronized (socket)
+
+            {
+                socket.close();
+            }
+        }).start();
+    }
+
     // Receive message from server
     String receive() {
 
