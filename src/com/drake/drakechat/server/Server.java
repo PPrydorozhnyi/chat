@@ -1,6 +1,7 @@
 package com.drake.drakechat.server;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -68,6 +69,8 @@ public class Server implements Runnable {
                 DatagramPacket packet = new DatagramPacket(data, data.length);
 
                 while (running) {
+                    data = new byte[1024];
+                    packet = new DatagramPacket(data, data.length);
                     try {
                         socket.receive(packet);
                     } catch (IOException e) {
@@ -84,7 +87,13 @@ public class Server implements Runnable {
     }
 
     private void process(DatagramPacket packet) {
-        String string = new String(packet.getData()).trim();
+        String string = "";
+
+        try {
+            string = new String(packet.getData(), "UTF-8").trim();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
         if (string.startsWith("/c/")) {
 
@@ -101,6 +110,7 @@ public class Server implements Runnable {
         } else if (string.startsWith("/m/")) {
 
             sendToAll(string);
+            System.out.println(string.substring(3, string.length()));
 
         } else {
             System.out.println(string);

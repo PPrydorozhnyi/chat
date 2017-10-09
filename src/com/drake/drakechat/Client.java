@@ -1,6 +1,7 @@
 package com.drake.drakechat;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.*;
 
 class Client {
@@ -87,7 +88,15 @@ class Client {
             e.printStackTrace();
         }
 
-        return new String(packet.getData()).trim();
+        String message = "";
+
+        try {
+            message = new String(packet.getData(), "UTF-8").trim();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        return message;
     }
 
     public int getID() {

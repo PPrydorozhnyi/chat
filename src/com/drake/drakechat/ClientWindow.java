@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.UnsupportedEncodingException;
 
 /**
  * Created by drake on 07/10/17.
@@ -45,6 +46,7 @@ public class ClientWindow extends JFrame implements Runnable {
         run.start();
     }
 
+    //TODO: font for text (windows sucks)
     private void createWindow() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -68,6 +70,7 @@ public class ClientWindow extends JFrame implements Runnable {
 
         history = new JTextArea();
         history.setEditable(false);
+        history.setFont(new Font("Comic Sans MS", Font.PLAIN, 14));
         JScrollPane scroll = new JScrollPane(history);
         GridBagConstraints scrollConstrains = new GridBagConstraints();
         scrollConstrains.insets = new Insets(0, 0, 5, 5);
@@ -89,8 +92,9 @@ public class ClientWindow extends JFrame implements Runnable {
                 }
             }
         });
+        txtMessage.setFont(new Font("Comic Sans MS", Font.PLAIN, 14));
         GridBagConstraints gbc_txtMessage = new GridBagConstraints();
-        gbc_txtMessage.insets = new Insets(0, 0, 0, 5);
+        gbc_txtMessage.insets = new Insets(0, 5, 0, 0);
         gbc_txtMessage.fill = GridBagConstraints.HORIZONTAL;
         gbc_txtMessage.gridx = 0;
         gbc_txtMessage.gridy = 2;
@@ -123,7 +127,11 @@ public class ClientWindow extends JFrame implements Runnable {
         //TODO: check if implements TCP
         //console(message);
         message = "/m/" + message;
-        client.send(message.getBytes());
+        try {
+            client.send(message.getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         txtMessage.setText("");
     }
 

@@ -64,6 +64,7 @@ public class Login extends JFrame {
             }
         });
         txtAddress.setBounds(67, 142, 165, 28);
+        txtAddress.setText("77.47.190.50");
         contentPane.add(txtAddress);
         txtAddress.setColumns(10);
 
@@ -86,6 +87,7 @@ public class Login extends JFrame {
         });
         txtPort.setColumns(10);
         txtPort.setBounds(67, 215, 165, 28);
+        txtPort.setText("8000");
         contentPane.add(txtPort);
 
         JButton btnLogin = new JButton("Login");
