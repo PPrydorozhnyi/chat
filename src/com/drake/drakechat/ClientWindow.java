@@ -168,6 +168,8 @@ public class ClientWindow extends JFrame implements Runnable {
                     } else if (message.startsWith("/m/")) {
                         String text = message.substring(3);
                         console(text);
+                    } else if (message.startsWith("/i/")) {
+                        send("/i/" + client.getID(), false);
                     }
                 }
             }
