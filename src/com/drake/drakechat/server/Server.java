@@ -8,6 +8,7 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Server implements Runnable {
 
@@ -46,6 +47,16 @@ public class Server implements Runnable {
 
         manageClients();
         receive();
+
+        Scanner scanner = new Scanner(System.in);
+        String text;
+
+        while (running) {
+            text = scanner.nextLine();
+            if (!text.startsWith("/"))
+                sendToAll("/m/Server: " + text);
+
+        }
 
     }
 
@@ -134,16 +145,18 @@ public class Server implements Runnable {
             System.out.println(clients.get(clients.size() - 1).getID());
             String ID = "/c/" + id;
             send(ID.getBytes(), packet.getAddress(), packet.getPort());
+            sendToAll("/h/" + clients.get(clients.size() - 1).name);
 
         } else if (string.startsWith("/m/")) {
 
             sendToAll(string);
-            System.out.println("Server: " + string.substring(3, string.length()) + "\n\r");
+            System.out.println("on Server: " + string.substring(3, string.length()) + "\n\r");
         } else if (string.startsWith("/d/")) {
             String id = string.split("/d/")[1];
             disconnect(Integer.parseInt(id), true);
         } else if (string.startsWith("/i/")) {
             clientResponse.add(Integer.parseInt(string.split("/i/")[1]));
+            System.out.println(Integer.parseInt(string.split("/i/")[1]));
         } else {
             System.out.println(string);
         }

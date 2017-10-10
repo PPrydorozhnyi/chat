@@ -136,6 +136,7 @@ public class ClientWindow extends JFrame implements Runnable {
         if (text) {
             message = client.getName() + ": " + message;
             message = "/m/" + message;
+            txtMessage.setText("");
         }
 
         try {
@@ -143,7 +144,6 @@ public class ClientWindow extends JFrame implements Runnable {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        txtMessage.setText("");
     }
 
     private void console(String message) {
@@ -170,6 +170,8 @@ public class ClientWindow extends JFrame implements Runnable {
                         console(text);
                     } else if (message.startsWith("/i/")) {
                         send("/i/" + client.getID(), false);
+                    } else if (message.startsWith("/h/")) {
+                        console(message.substring(3, message.length()) + " successfully connected to the server");
                     }
                 }
             }
