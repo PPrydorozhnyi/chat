@@ -166,7 +166,7 @@ public class ClientWindow extends JFrame implements Runnable {
                         client.setID(Integer.parseInt(message.substring(3, message.length())));
                         console("Successfully connected to the server ID: " + client.getID());
                     } else if (message.startsWith("/m/")) {
-                        String text = message.split("/m/")[1];
+                        String text = message.substring(3);
                         console(text);
                     }
                 }
