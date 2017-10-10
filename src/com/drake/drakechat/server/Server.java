@@ -50,12 +50,25 @@ public class Server implements Runnable {
 
         Scanner scanner = new Scanner(System.in);
         String text;
+        ServerClient c;
 
+        // server commands
         while (running) {
             text = scanner.nextLine();
             if (!text.startsWith("/"))
                 sendToAll("/m/Server: " + text);
 
+            text = text.substring(1);
+
+            if (text.equals("clients")) {
+                System.out.println("Clients: ");
+                System.out.println("-----------");
+                for (int i = 0; i < clients.size(); i++) {
+                    c = clients.get(i);
+                    System.out.println(c.name + "(" + c.getID() + "): " + c.address + ":" + c.port);
+                }
+                System.out.println("-----------");
+            }
         }
 
     }
