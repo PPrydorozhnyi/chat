@@ -97,7 +97,7 @@ public class Server implements Runnable {
             for (int i = 0; i < clients.size(); i++) {
                 c = clients.get(i);
                 if (c.getID() == id) {
-                    disconnect(id, true);
+                    disconnect(id, DisconnectFlags.KICKED);
                     return;
                 }
             }
@@ -109,7 +109,7 @@ public class Server implements Runnable {
             for (int i = 0; i < clients.size(); i++) {
                 c = clients.get(i);
                 if (name.equals(c.name)) {
-                    disconnect(c.getID(), true);
+                    disconnect(c.getID(), DisconnectFlags.KICKED);
                     return;
                 }
             }
@@ -141,7 +141,7 @@ public class Server implements Runnable {
                         ServerClient c = clients.get(i);
                         if (!clientResponse.contains(c.getID()))
                             if (c.attempt >= MAX_ATTEMPTS) {
-                                disconnect(c.getID(), false);
+                                disconnect(c.getID(), DisconnectFlags.INCORRECT);
                             } else
                                 c.attempt++;
                         else {
@@ -212,7 +212,7 @@ public class Server implements Runnable {
             System.out.println("on Server: " + string.substring(3, string.length()) + "\n\r");
         } else if (string.startsWith("/d/")) {
             String id = string.split("/d/")[1];
-            disconnect(Integer.parseInt(id), true);
+            disconnect(Integer.parseInt(id), DisconnectFlags.CORRECT);
         } else if (string.startsWith("/i/")) {
             clientResponse.add(Integer.parseInt(string.split("/i/")[1]));
             //System.out.println(Integer.parseInt(string.split("/i/")[1]));
@@ -221,7 +221,7 @@ public class Server implements Runnable {
         }
     }
 
-    private void disconnect(int id, boolean status) {
+    private void disconnect(int id, DisconnectFlags status) {
         ServerClient c = null;
         boolean isFound = false;
         for (int i = 0; i < clients.size(); i++) {
@@ -237,13 +237,30 @@ public class Server implements Runnable {
             return;
         }
 
-        String message;
-        if (status)
-            message = "Client " + c.name + " (" + c.getID() + ")" +
-                    c.address + ":" + c.port + " disconnected";
-        else
-            message = "Client " + c.name + " (" + c.getID() + ")" +
-                    c.address + ":" + c.port + " timed out";
+        String message = "";
+
+        switch (status) {
+            case CORRECT:
+                message = "Client " + c.name + " (" + c.getID() + ")" +
+                        c.address + ":" + c.port + " disconnected";
+                break;
+            case INCORRECT:
+                message = "Client " + c.name + " (" + c.getID() + ")" +
+                        c.address + ":" + c.port + " timed out";
+                break;
+            case KICKED:
+                message = "Client " + c.name + " (" + c.getID() + ")" +
+                        c.address + ":" + c.port + " kicked";
+                try {
+                    send("/k/You are kicked from the server".getBytes("UTF-8"), c.address, c.port);
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                break;
+            default:
+                System.out.println("default case in desconnect method");
+        }
+
 
         System.out.println(message);
         sendToAll("/m/" + message);
