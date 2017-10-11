@@ -68,7 +68,54 @@ public class Server implements Runnable {
                     System.out.println(c.name + "(" + c.getID() + "): " + c.address + ":" + c.port);
                 }
                 System.out.println("-----------");
+            } else if (text.startsWith("kick")) {
+                kick(text);
             }
+        }
+
+    }
+
+    private void kick(String text) {
+
+        String name;
+        boolean num;
+        int id;
+        boolean exists = false;
+        ServerClient c;
+
+        name = text.split(" ")[1];
+        num = true;
+        id = -1;
+        try {
+            id = Integer.parseInt(name);
+        } catch (NumberFormatException e) {
+            num = false;
+        }
+
+        if (num) {
+            exists = false;
+            for (int i = 0; i < clients.size(); i++) {
+                c = clients.get(i);
+                if (c.getID() == id) {
+                    disconnect(id, true);
+                    return;
+                }
+            }
+
+            System.out.println("Client " + id + "does not exist. Check id");
+
+        } else {
+
+            for (int i = 0; i < clients.size(); i++) {
+                c = clients.get(i);
+                if (name.equals(c.name)) {
+                    disconnect(c.getID(), true);
+                    return;
+                }
+            }
+
+            System.out.println("Client with this name does not exist. Check name");
+
         }
 
     }
@@ -161,7 +208,6 @@ public class Server implements Runnable {
             sendToAll("/h/" + clients.get(clients.size() - 1).name);
 
         } else if (string.startsWith("/m/")) {
-
             sendToAll(string);
             System.out.println("on Server: " + string.substring(3, string.length()) + "\n\r");
         } else if (string.startsWith("/d/")) {
@@ -169,7 +215,7 @@ public class Server implements Runnable {
             disconnect(Integer.parseInt(id), true);
         } else if (string.startsWith("/i/")) {
             clientResponse.add(Integer.parseInt(string.split("/i/")[1]));
-            System.out.println(Integer.parseInt(string.split("/i/")[1]));
+            //System.out.println(Integer.parseInt(string.split("/i/")[1]));
         } else {
             System.out.println(string);
         }
@@ -177,12 +223,18 @@ public class Server implements Runnable {
 
     private void disconnect(int id, boolean status) {
         ServerClient c = null;
+        boolean isFound = false;
         for (int i = 0; i < clients.size(); i++) {
             if (clients.get(i).getID() == id) {
+                isFound = true;
                 c = clients.get(i);
                 clients.remove(i);
                 break;
             }
+        }
+
+        if (!isFound) {
+            return;
         }
 
         String message;
