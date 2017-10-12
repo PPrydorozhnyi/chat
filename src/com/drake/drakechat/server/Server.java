@@ -158,6 +158,22 @@ public class Server implements Runnable {
         manage.start();
     }
 
+    private void sendStatus() {
+        if (clients.size() == 0)
+            return;
+
+        StringBuilder users = new StringBuilder();
+        users.append("/u/");
+
+        for (int i = 0; i < clients.size() - 1; i++) {
+            users.append(clients.get(i).name);
+            users.append("/n/");
+        }
+
+        users.append(clients.get(clients.size() - 1).name);
+        sendToAll(users.toString());
+    }
+
     private void receive() {
 
         receive = new Thread("Receive") {
@@ -201,6 +217,8 @@ public class Server implements Runnable {
             clients.add(new ServerClient(string.substring(3, string.length()), packet.getAddress(),
                     packet.getPort(), id));
 
+            sendStatus();
+
             System.out.println(string.substring(3, string.length()));
             System.out.println(clients.get(clients.size() - 1).getID());
             String ID = "/c/" + id;
@@ -209,7 +227,7 @@ public class Server implements Runnable {
 
         } else if (string.startsWith("/m/")) {
             sendToAll(string);
-            System.out.println("on Server: " + string.substring(3, string.length()) + "\n\r");
+            System.out.println("on Server: " + string.substring(3, string.length()));
         } else if (string.startsWith("/d/")) {
             String id = string.split("/d/")[1];
             disconnect(Integer.parseInt(id), DisconnectFlags.CORRECT);
@@ -263,6 +281,7 @@ public class Server implements Runnable {
 
 
         System.out.println(message);
+        sendStatus();
         sendToAll("/m/" + message);
 
     }
