@@ -109,7 +109,14 @@ public class ClientWindow extends JFrame implements Runnable {
         scrollConstrains.insets = new Insets(0, 5, 0, 0);
         contentPane.add(scroll, scrollConstrains);
 
-        txtMessage = new JTextField();
+        txtMessage = new JTextField("", 500);
+        txtMessage.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent e) {
+                if (txtMessage.getText().length() == 500) {
+                    e.consume();
+                }
+            }
+        });
         txtMessage.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {

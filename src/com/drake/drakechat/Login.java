@@ -37,7 +37,14 @@ public class Login extends JFrame {
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
-        txtName = new JTextField();
+        txtName = new JTextField("", 20);
+        txtName.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent e) {
+                if (txtName.getText().length() == 20) {
+                    e.consume();
+                }
+            }
+        });
         txtName.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -54,7 +61,14 @@ public class Login extends JFrame {
         lblName.setBounds(122, 40, 55, 15);
         contentPane.add(lblName);
 
-        txtAddress = new JTextField();
+        txtAddress = new JTextField("77.47.190.50", 20);
+        txtAddress.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent e) {
+                if (txtAddress.getText().length() == 20) {
+                    e.consume();
+                }
+            }
+        });
         txtAddress.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -64,7 +78,6 @@ public class Login extends JFrame {
             }
         });
         txtAddress.setBounds(67, 142, 165, 28);
-        txtAddress.setText("77.47.190.50");
         contentPane.add(txtAddress);
         txtAddress.setColumns(10);
 
@@ -76,7 +89,14 @@ public class Login extends JFrame {
         lblPort.setBounds(129, 193, 41, 15);
         contentPane.add(lblPort);
 
-        txtPort = new JTextField();
+        txtPort = new JTextField("8000", 5);
+        txtPort.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent e) {
+                if (txtPort.getText().length() == 5) {
+                    e.consume();
+                }
+            }
+        });
         txtPort.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -87,7 +107,6 @@ public class Login extends JFrame {
         });
         txtPort.setColumns(10);
         txtPort.setBounds(67, 215, 165, 28);
-        txtPort.setText("8000");
         contentPane.add(txtPort);
 
         JButton btnLogin = new JButton("Login");
