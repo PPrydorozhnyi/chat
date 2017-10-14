@@ -20,6 +20,7 @@ public class ClientWindow extends JFrame implements Runnable {
 
     private Client client;
     private Thread run;
+    private volatile boolean connected;
 
     private Thread listen;
     private boolean running = false;
@@ -42,14 +43,30 @@ public class ClientWindow extends JFrame implements Runnable {
 
         createWindow();
         console("Attempting a connection to " + address + ": " + port + ", user: " + name);
-        String connection = "/c/" + name;
-        client.send(connection.getBytes());
 
         users = new OnlineUsers();
 
         run = new Thread(this, "Running");
         run.start();
     }
+
+    private void connect() {
+        new Thread("Connect") {
+            @Override
+            public void run() {
+                while (!connected) {
+                    String connection = "/c/" + client.getName();
+                    client.send(connection.getBytes());
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }.start();
+    }
+
 
     //TODO: font for text (windows sucks)
     private void createWindow() {
@@ -83,6 +100,11 @@ public class ClientWindow extends JFrame implements Runnable {
         mnFile.add(mntmOnlineUsers);
 
         mntmExit = new JMenuItem("Exit");
+        mntmExit.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
         mnFile.add(mntmExit);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -135,6 +157,7 @@ public class ClientWindow extends JFrame implements Runnable {
         gbc_txtMessage.weightx = 1;
         contentPane.add(txtMessage, gbc_txtMessage);
         txtMessage.setColumns(10);
+        txtMessage.setEditable(false);
 
         JButton btnSend = new JButton("Send");
         btnSend.addActionListener(new ActionListener() {
@@ -203,7 +226,9 @@ public class ClientWindow extends JFrame implements Runnable {
                     String message = client.receive();
                     //System.out.println(message);
                     if (message.startsWith("/c/")) {
+                        connected = true;
                         client.setID(Integer.parseInt(message.substring(3, message.length())));
+                        txtMessage.setEditable(true);
                         console("Successfully connected to the server ID: " + client.getID());
                     } else if (message.startsWith("/m/")) {
                         String text = message.substring(3);
@@ -232,6 +257,7 @@ public class ClientWindow extends JFrame implements Runnable {
     @Override
     public void run() {
         running = true;
+        connect();
         listen();
     }
 

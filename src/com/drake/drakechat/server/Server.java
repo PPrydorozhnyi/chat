@@ -156,6 +156,7 @@ public class Server implements Runnable {
         manage.start();
     }
 
+    // connected users
     private void sendStatus() {
         if (clients.size() == 0)
             return;
