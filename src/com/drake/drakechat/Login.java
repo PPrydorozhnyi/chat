@@ -16,6 +16,7 @@ public class Login extends JFrame {
     private JTextField txtAddress;
     private JLabel lblAddress;
     private JLabel lblPort;
+    private JLabel lblTry;
     private JTextField txtPort;
 
     private Login() {
@@ -37,7 +38,7 @@ public class Login extends JFrame {
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
-        txtName = new JTextField("", 20);
+        txtName = new JTextField("your name", 20);
         txtName.addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
                 if (txtName.getText().length() == 20) {
@@ -89,6 +90,10 @@ public class Login extends JFrame {
         lblPort.setBounds(129, 193, 41, 15);
         contentPane.add(lblPort);
 
+        lblPort = new JLabel("Port:");
+        lblPort.setBounds(129, 193, 41, 15);
+        contentPane.add(lblPort);
+
         txtPort = new JTextField("8000", 5);
         txtPort.addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
@@ -118,14 +123,29 @@ public class Login extends JFrame {
         btnLogin.setBounds(90, 280, 117, 25);
         contentPane.add(btnLogin);
 
+        lblTry = new JLabel("Incorrect input. Try again");
+        lblTry.setForeground(Color.RED);
+        lblTry.setBounds(62, 335, 191, 20);
+        contentPane.add(lblTry);
+        lblTry.setVisible(false);
+
     }
 
     private void sendInfo() {
         String name = txtName.getText();
         String address = txtAddress.getText();
-        int port = Integer.parseInt(txtPort.getText());
+        int port;
+        try {
+            port = Integer.parseInt(txtPort.getText());
+        } catch (Exception e) {
+            port = 0;
+        }
 
-        login(name, address, port);
+        // system defined ports
+        if (!name.isEmpty() && port > 1023)
+            login(name, address, port);
+        else
+            lblTry.setVisible(true);
     }
 
 

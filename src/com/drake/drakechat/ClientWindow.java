@@ -30,7 +30,7 @@ public class ClientWindow extends JFrame implements Runnable {
 
     private OnlineUsers users;
 
-    public ClientWindow(String name, String address, int port) {
+    ClientWindow(String name, String address, int port) {
         client = new Client(name, address, port);
 
         boolean connect = client.openConnection(address);
@@ -59,7 +59,7 @@ public class ClientWindow extends JFrame implements Runnable {
             e.printStackTrace();
         }
 
-        setTitle("Drake`s chat client");
+        setTitle("Chatik");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setSize(750, 500);
@@ -218,7 +218,7 @@ public class ClientWindow extends JFrame implements Runnable {
                         txtMessage.setText("See ya...");
                         txtMessage.setEditable(false);
                     } else if (message.startsWith("/u/")) {
-                        System.out.println(message);
+                        //System.out.println(message);
                         String[] u = message.split("/u/|/n/");
                         users.update(Arrays.copyOfRange(u, 1, u.length));
                     }

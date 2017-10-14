@@ -80,7 +80,6 @@ public class Server implements Runnable {
         String name;
         boolean num;
         int id;
-        boolean exists = false;
         ServerClient c;
 
         name = text.split(" ")[1];
@@ -93,7 +92,6 @@ public class Server implements Runnable {
         }
 
         if (num) {
-            exists = false;
             for (int i = 0; i < clients.size(); i++) {
                 c = clients.get(i);
                 if (c.getID() == id) {
@@ -270,13 +268,13 @@ public class Server implements Runnable {
                 message = "Client " + c.name + " (" + c.getID() + ")" +
                         c.address + ":" + c.port + " kicked";
                 try {
-                    send("/k/You are kicked from the server".getBytes("UTF-8"), c.address, c.port);
+                    send("/k/You have been kicked from this server".getBytes("UTF-8"), c.address, c.port);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
                 break;
             default:
-                System.out.println("default case in desconnect method");
+                System.out.println("default case in disconnect method");
         }
 
 
