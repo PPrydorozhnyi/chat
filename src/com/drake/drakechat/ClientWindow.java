@@ -102,6 +102,9 @@ public class ClientWindow extends JFrame implements Runnable {
         mntmExit = new JMenuItem("Exit");
         mntmExit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                String disconnect = "/d/" + client.getID();
+                send(disconnect, false);
+                running = false;
                 System.exit(0);
             }
         });

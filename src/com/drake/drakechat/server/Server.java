@@ -55,24 +55,43 @@ public class Server implements Runnable {
         // server commands
         while (running) {
             text = scanner.nextLine();
-            if (!text.startsWith("/"))
+            if (!text.startsWith("/")) {
                 sendToAll("/m/Server: " + text);
+            } else {
+                text = text.substring(1);
 
-            text = text.substring(1);
-
-            if (text.equals("clients")) {
-                System.out.println("Clients: ");
-                System.out.println("-----------");
-                for (int i = 0; i < clients.size(); i++) {
-                    c = clients.get(i);
-                    System.out.println(c.name + "(" + c.getID() + "): " + c.address + ":" + c.port);
+                if (text.equals("clients")) {
+                    System.out.println("Clients: ");
+                    System.out.println("-----------");
+                    for (int i = 0; i < clients.size(); i++) {
+                        c = clients.get(i);
+                        System.out.println(c.name + "(" + c.getID() + "): " + c.address + ":" + c.port);
+                    }
+                    System.out.println("-----------");
+                } else if (text.startsWith("kick")) {
+                    kick(text);
+                } else if (text.equals("quit")) {
+                    quit();
+                } else if (text.equals("help")) {
+                    printHelp();
+                } else {
+                    System.out.println("Unknown command");
+                    printHelp();
                 }
-                System.out.println("-----------");
-            } else if (text.startsWith("kick")) {
-                kick(text);
             }
+
         }
 
+    }
+
+    private void printHelp() {
+        System.out.println("List of all available commands: ");
+        System.out.println("--------------------------------");
+        System.out.println("/clients - show clients list");
+        System.out.println("/kick [name OR id] - kick client with this name or id");
+        System.out.println("/help - show help message");
+        System.out.println("/quit - shut down he server");
+        System.out.println("--------------------------------");
     }
 
     private void kick(String text) {
@@ -187,6 +206,8 @@ public class Server implements Runnable {
                     packet = new DatagramPacket(data, data.length);
                     try {
                         socket.receive(packet);
+                    } catch (SocketException e) {
+                        System.out.println("The server has been shut down");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -236,6 +257,16 @@ public class Server implements Runnable {
         } else {
             System.out.println(string);
         }
+    }
+
+    private void quit() {
+        for (int i = 0; i < clients.size(); i++) {
+            disconnect(clients.get(i).getID(), DisconnectFlags.CORRECT);
+        }
+
+        running = false;
+        socket.close();
+
     }
 
     private void disconnect(int id, DisconnectFlags status) {
