@@ -101,7 +101,7 @@ public class Server implements Runnable {
         int id;
         ServerClient c;
 
-        name = text.split(" ")[1];
+        name = text.split(" ", 2)[1];
         num = true;
         id = -1;
         try {

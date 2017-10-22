@@ -127,13 +127,6 @@ public class ClientWindow extends JFrame implements Runnable {
         document = new DefaultStyledDocument(context);
         stickers = Stickers.getInstance();
 
-//        Style style;
-//        style = context.getStyle(StyleContext.DEFAULT_STYLE);
-//        StyleConstants.setAlignment(style, StyleConstants.ALIGN_RIGHT);
-//        StyleConstants.setFontSize(style, 14);
-//        StyleConstants.setSpaceAbove(style, 4);
-//        StyleConstants.setSpaceBelow(style, 4);
-
         JTextPane textPane = new JTextPane(document);
         history = new JTextPane(document);
         history.setEditable(false);
@@ -289,6 +282,9 @@ public class ClientWindow extends JFrame implements Runnable {
                     } else if (message.startsWith("/h/")) {
                         console(message.substring(3, message.length()) + " successfully connected to the server");
                     } else if (message.startsWith("/k/")) {
+                        Style style;
+                        style = context.getStyle(StyleContext.DEFAULT_STYLE);
+                        StyleConstants.setForeground(style, Color.RED);
                         String text = message.substring(3);
                         console(text);
                         txtMessage.setText("See ya...");
