@@ -144,7 +144,7 @@ public class Server implements Runnable {
                 while (running) {
 
                     //check client connection
-                    sendToAll("/i/server");
+                    sendToAll("/s/server");
 
                     try {
                         //kind of ping
@@ -251,8 +251,8 @@ public class Server implements Runnable {
         } else if (string.startsWith("/d/")) {
             String id = string.split("/d/")[1];
             disconnect(Integer.parseInt(id), DisconnectFlags.CORRECT);
-        } else if (string.startsWith("/i/")) {
-            clientResponse.add(Integer.parseInt(string.split("/i/")[1]));
+        } else if (string.startsWith("/s/")) {
+            clientResponse.add(Integer.parseInt(string.split("/s/")[1]));
             //System.out.println(Integer.parseInt(string.split("/i/")[1]));
         } else {
             System.out.println(string);

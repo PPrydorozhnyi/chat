@@ -2,6 +2,7 @@ package com.drake.drakechat;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.UnsupportedEncodingException;
@@ -16,7 +17,7 @@ public class ClientWindow extends JFrame implements Runnable {
 
     private JPanel contentPane;
     private JTextField txtMessage;
-    private JTextArea history;
+    private JTextPane history;
 
     private Client client;
     private Thread run;
@@ -31,6 +32,10 @@ public class ClientWindow extends JFrame implements Runnable {
 
     private OnlineUsers users;
     private JButton smileButton;
+
+    private StyledDocument document;
+    private StyleContext context;
+    private Stickers stickers;
 
     ClientWindow(String name, String address, int port) {
         client = new Client(name, address, port);
@@ -118,7 +123,19 @@ public class ClientWindow extends JFrame implements Runnable {
         gbl_contentPane.rowHeights = new int[]{20, 430, 50}; // SUM = 500
         contentPane.setLayout(gbl_contentPane);
 
-        history = new JTextArea();
+        context = new StyleContext();
+        document = new DefaultStyledDocument(context);
+        stickers = Stickers.getInstance();
+
+//        Style style;
+//        style = context.getStyle(StyleContext.DEFAULT_STYLE);
+//        StyleConstants.setAlignment(style, StyleConstants.ALIGN_RIGHT);
+//        StyleConstants.setFontSize(style, 14);
+//        StyleConstants.setSpaceAbove(style, 4);
+//        StyleConstants.setSpaceBelow(style, 4);
+
+        JTextPane textPane = new JTextPane(document);
+        history = new JTextPane(document);
         history.setEditable(false);
         history.setFont(new Font("Comic Sans MS", Font.PLAIN, 14));
         JScrollPane scroll = new JScrollPane(history);
@@ -171,6 +188,23 @@ public class ClientWindow extends JFrame implements Runnable {
         });
 
         smileButton = new JButton("\u263A");
+        smileButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Style labelStyle = context.getStyle(StyleContext.DEFAULT_STYLE);
+
+                stickers.load("sticker.png", "angry");
+                stickers.load("kot.gif", "kot");
+                Icon icon = stickers.getIcon("kot");
+                history.insertIcon(icon);
+                try {
+                    document.insertString(document.getLength(), "\n\r", null);
+                } catch (BadLocationException badLocationException) {
+                    System.err.println("Oops");
+                }
+
+            }
+        });
         GridBagConstraints gbc_button = new GridBagConstraints();
         gbc_button.insets = new Insets(0, 0, 0, 5);
         gbc_button.gridx = 2;
@@ -200,7 +234,6 @@ public class ClientWindow extends JFrame implements Runnable {
         setVisible(true);
 
         txtMessage.requestFocusInWindow();
-        //TODO: add smiles button(7)
     }
 
     private void send(String message, boolean text) {
@@ -224,8 +257,13 @@ public class ClientWindow extends JFrame implements Runnable {
 
     private void console(String message) {
         //TODO: add color
-        //TODO add image
-        history.append(message + "\n\r");
+        //TODO add
+        try {
+            document.insertString(document.getLength(), message + "\n\r", null);
+        } catch (BadLocationException badLocationException) {
+            System.err.println("Oops");
+        }
+        //history.append(message + "\n\r");
         // to update caret position
         history.setCaretPosition(history.getDocument().getLength());
         txtMessage.requestFocusInWindow();
@@ -246,8 +284,8 @@ public class ClientWindow extends JFrame implements Runnable {
                     } else if (message.startsWith("/m/")) {
                         String text = message.substring(3);
                         console(text);
-                    } else if (message.startsWith("/i/")) {
-                        send("/i/" + client.getID(), false);
+                    } else if (message.startsWith("/s/")) {
+                        send("/s/" + client.getID(), false);
                     } else if (message.startsWith("/h/")) {
                         console(message.substring(3, message.length()) + " successfully connected to the server");
                     } else if (message.startsWith("/k/")) {
