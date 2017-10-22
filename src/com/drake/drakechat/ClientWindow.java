@@ -30,6 +30,7 @@ public class ClientWindow extends JFrame implements Runnable {
     private JMenuItem mntmExit;
 
     private OnlineUsers users;
+    private JButton smileButton;
 
     ClientWindow(String name, String address, int port) {
         client = new Client(name, address, port);
@@ -122,7 +123,7 @@ public class ClientWindow extends JFrame implements Runnable {
         history.setFont(new Font("Comic Sans MS", Font.PLAIN, 14));
         JScrollPane scroll = new JScrollPane(history);
         GridBagConstraints scrollConstrains = new GridBagConstraints();
-        scrollConstrains.insets = new Insets(0, 0, 5, 5);
+        scrollConstrains.insets = new Insets(0, 5, 5, 5);
         scrollConstrains.fill = GridBagConstraints.BOTH;
         scrollConstrains.gridx = 0;
         scrollConstrains.gridy = 0;
@@ -152,7 +153,7 @@ public class ClientWindow extends JFrame implements Runnable {
         });
         txtMessage.setFont(new Font("Comic Sans MS", Font.PLAIN, 14));
         GridBagConstraints gbc_txtMessage = new GridBagConstraints();
-        gbc_txtMessage.insets = new Insets(0, 5, 0, 0);
+        gbc_txtMessage.insets = new Insets(0, 5, 0, 5);
         gbc_txtMessage.fill = GridBagConstraints.HORIZONTAL;
         gbc_txtMessage.gridx = 0;
         gbc_txtMessage.gridy = 2;
@@ -168,6 +169,15 @@ public class ClientWindow extends JFrame implements Runnable {
                 send(txtMessage.getText(), true);
             }
         });
+
+        smileButton = new JButton("\u263A");
+        GridBagConstraints gbc_button = new GridBagConstraints();
+        gbc_button.insets = new Insets(0, 0, 0, 5);
+        gbc_button.gridx = 2;
+        gbc_button.gridy = 2;
+        gbc_button.weightx = 0;
+        gbc_button.weighty = 0;
+        contentPane.add(smileButton, gbc_button);
         GridBagConstraints gbc_btnSend = new GridBagConstraints();
         gbc_btnSend.insets = new Insets(0, 0, 0, 5);
         gbc_btnSend.gridx = 3;
