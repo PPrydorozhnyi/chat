@@ -159,6 +159,7 @@ public class Server implements Runnable {
                         if (!clientResponse.contains(c.getID()))
                             if (c.attempt >= MAX_ATTEMPTS) {
                                 disconnect(c.getID(), DisconnectFlags.INCORRECT);
+                                System.out.println("how");
                             } else
                                 c.attempt++;
                         else {
@@ -245,15 +246,15 @@ public class Server implements Runnable {
             send(ID.getBytes(), packet.getAddress(), packet.getPort());
             sendToAll("/h/" + clients.get(clients.size() - 1).name);
 
-        } else if (string.startsWith("/m/")) {
+        } else if (string.matches("(/m/|/i/).*")) {                                                  //message || icon
             sendToAll(string);
             System.out.println("on Server: " + string.substring(3, string.length()));
-        } else if (string.startsWith("/d/")) {
+        } else if (string.startsWith("/d/")) {                                                 //disconnect
             String id = string.split("/d/")[1];
             disconnect(Integer.parseInt(id), DisconnectFlags.CORRECT);
-        } else if (string.startsWith("/s/")) {
+        } else if (string.startsWith("/s/")) {                                               //status
             clientResponse.add(Integer.parseInt(string.split("/s/")[1]));
-            //System.out.println(Integer.parseInt(string.split("/i/")[1]));
+            //System.out.println(Integer.parseInt(string.split("/s/")[1]));
         } else {
             System.out.println(string);
         }

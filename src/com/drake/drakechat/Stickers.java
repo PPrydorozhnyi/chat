@@ -23,7 +23,7 @@ public class Stickers {
         icons = new HashMap<>();
     }
 
-    public void load(String resorcePath, String name) {
+    private void load(String resorcePath, String name) {
         URL resource = Stickers.class.getClassLoader().getResource(resorcePath);
         //System.out.println(resource);
         Icon icon = null;
@@ -38,5 +38,10 @@ public class Stickers {
 
     public Icon getIcon(String name) {
         return icons.get(name);
+    }
+
+    public void loadAll() {
+        load("sticker.png", "angry");
+        load("kot.gif", "kot");
     }
 }

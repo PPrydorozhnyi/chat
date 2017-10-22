@@ -37,10 +37,13 @@ public class ClientWindow extends JFrame implements Runnable {
     private StyleContext context;
     private Stickers stickers;
 
+    private boolean firstSticker;
+
     ClientWindow(String name, String address, int port) {
         client = new Client(name, address, port);
 
         boolean connect = client.openConnection(address);
+        firstSticker = true;
 
         if (!connect) {
             System.out.println("Connection failed!");
@@ -184,17 +187,16 @@ public class ClientWindow extends JFrame implements Runnable {
         smileButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Style labelStyle = context.getStyle(StyleContext.DEFAULT_STYLE);
-
-                stickers.load("sticker.png", "angry");
-                stickers.load("kot.gif", "kot");
-                Icon icon = stickers.getIcon("kot");
-                history.insertIcon(icon);
-                try {
-                    document.insertString(document.getLength(), "\n\r", null);
-                } catch (BadLocationException badLocationException) {
-                    System.err.println("Oops");
-                }
+                //TODO: add ENUM to stickers
+                //String string = "\n\r";
+                //send(string, true);
+//                try {
+//                    Thread.sleep(10);
+//                } catch (InterruptedException e1) {
+//                    e1.printStackTrace();
+//                }
+                String string = "/i/kot/n/" + client.getName();
+                send(string, false);
 
             }
         });
@@ -279,6 +281,30 @@ public class ClientWindow extends JFrame implements Runnable {
                         console(text);
                     } else if (message.startsWith("/s/")) {
                         send("/s/" + client.getID(), false);
+                        //System.out.println("ping");
+                    } else if (message.startsWith("/i/")) {
+
+                        if (firstSticker) {
+                            stickers.loadAll();
+                            firstSticker = false;
+                        }
+                        //System.out.println(message);
+                        String[] sticker = message.split("/n/");
+                        console(sticker[1] + ":");
+                        try {
+                            Thread.sleep(10);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        Icon icon = stickers.getIcon(sticker[0].substring(3));
+                        history.insertIcon(icon);
+                        try {
+                            document.insertString(document.getLength(), "\n\r", null);
+                        } catch (BadLocationException badLocationException) {
+                            System.err.println("Text in icon showing error");
+                        }
+                        history.setCaretPosition(history.getDocument().getLength());
+                        txtMessage.requestFocusInWindow();
                     } else if (message.startsWith("/h/")) {
                         console(message.substring(3, message.length()) + " successfully connected to the server");
                     } else if (message.startsWith("/k/")) {
