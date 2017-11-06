@@ -43,5 +43,7 @@ public class Stickers {
     public void loadAll() {
         load("sticker.png", "angry");
         load("kot.gif", "kot");
+        load("runner.gif", "runner");
+        load("robot.gif", "robot");
     }
 }

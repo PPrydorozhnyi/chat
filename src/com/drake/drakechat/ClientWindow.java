@@ -9,33 +9,28 @@ import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 /**
- * Created by drake on 07/10/17.
+ * Client window
  */
 
 
 public class ClientWindow extends JFrame implements Runnable {
 
-    private JPanel contentPane;
     private JTextField txtMessage;
     private JTextPane history;
 
     private Client client;
-    private Thread run;
     private volatile boolean connected;
 
-    private Thread listen;
     private boolean running = false;
-    private JMenuBar menuBar;
-    private JMenu mnFile;
-    private JMenuItem mntmOnlineUsers;
-    private JMenuItem mntmExit;
 
     private OnlineUsers users;
-    private JButton smileButton;
 
     private StyledDocument document;
     private StyleContext context;
     private Stickers stickers;
+
+    private Style styleName;
+    private Style styleText;
 
     private boolean firstSticker;
 
@@ -47,16 +42,15 @@ public class ClientWindow extends JFrame implements Runnable {
 
         if (!connect) {
             System.out.println("Connection failed!");
-            console("Connection failed!");
+            console("Connection failed!", false);
         }
 
         createWindow();
-        console("Attempting a connection to " + address + ": " + port + ", user: " + name);
+        console("Attempting a connection to " + address + ": " + port + ", user: " + name, false);
 
         users = new OnlineUsers();
 
-        run = new Thread(this, "Running");
-        run.start();
+        new Thread(this, "Running").start();
     }
 
     private void connect() {
@@ -91,16 +85,16 @@ public class ClientWindow extends JFrame implements Runnable {
         setSize(750, 500);
         setMinimumSize(new Dimension(750, 500));
 
-        menuBar = new JMenuBar();
+        JMenuBar menuBar = new JMenuBar();
         menuBar.setBackground(Color.WHITE);
         setJMenuBar(menuBar);
 
-        mnFile = new JMenu("File");
+        JMenu mnFile = new JMenu("File");
         //mnFile.setBackground(Color.BLACK);
         mnFile.setForeground(Color.BLACK);
         menuBar.add(mnFile);
 
-        mntmOnlineUsers = new JMenuItem("Online users");
+        JMenuItem mntmOnlineUsers = new JMenuItem("Online users");
         mntmOnlineUsers.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 users.setVisible(true);
@@ -108,7 +102,7 @@ public class ClientWindow extends JFrame implements Runnable {
         });
         mnFile.add(mntmOnlineUsers);
 
-        mntmExit = new JMenuItem("Exit");
+        JMenuItem mntmExit = new JMenuItem("Exit");
         mntmExit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String disconnect = "/d/" + client.getID();
@@ -118,7 +112,7 @@ public class ClientWindow extends JFrame implements Runnable {
             }
         });
         mnFile.add(mntmExit);
-        contentPane = new JPanel();
+        JPanel contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
         GridBagLayout gbl_contentPane = new GridBagLayout();
@@ -130,11 +124,18 @@ public class ClientWindow extends JFrame implements Runnable {
         document = new DefaultStyledDocument(context);
         stickers = Stickers.getInstance();
 
-        JTextPane textPane = new JTextPane(document);
+        //JTextPane textPane = new JTextPane(document);
         history = new JTextPane(document);
+
+        styleName = history.addStyle("styleName", null);
+        StyleConstants.setForeground(styleName, Color.blue);
+        styleText = history.addStyle("styleText", null);
+        StyleConstants.setForeground(styleText, Color.black);
+
         history.setEditable(false);
         history.setFont(new Font("Comic Sans MS", Font.PLAIN, 14));
         JScrollPane scroll = new JScrollPane(history);
+        //scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         GridBagConstraints scrollConstrains = new GridBagConstraints();
         scrollConstrains.insets = new Insets(0, 5, 5, 5);
         scrollConstrains.fill = GridBagConstraints.BOTH;
@@ -183,7 +184,7 @@ public class ClientWindow extends JFrame implements Runnable {
             }
         });
 
-        smileButton = new JButton("\u263A");
+        JButton smileButton = new JButton("\u263A");
         smileButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -195,7 +196,7 @@ public class ClientWindow extends JFrame implements Runnable {
 //                } catch (InterruptedException e1) {
 //                    e1.printStackTrace();
 //                }
-                String string = "/i/kot/n/" + client.getName();
+                String string = "/i/angry/n/" + client.getName();
                 send(string, false);
 
             }
@@ -250,13 +251,32 @@ public class ClientWindow extends JFrame implements Runnable {
         }
     }
 
-    private void console(String message) {
+    private void console(String message, boolean isName) {
         //TODO: add color
         //TODO add
+        Style style;
+
+//        message = message + "\n\r";
+
+//        for (int i = 0; i < message.length(); i++) {
+//            try {
+//                document.insertString(document.getLength(), message.substring(i, i + 1), null);
+//            } catch (BadLocationException e) {
+//                e.printStackTrace();
+//            }
+//        }
+
+        if (isName) {
+            style = styleName;
+        } else {
+            style = styleText;
+            message = message + "\n\r";
+        }
+
         try {
-            document.insertString(document.getLength(), message + "\n\r", null);
+            document.insertString(document.getLength(), message, style);
         } catch (BadLocationException badLocationException) {
-            System.err.println("Oops");
+            System.err.println("Document error in console method");
         }
         //history.append(message + "\n\r");
         // to update caret position
@@ -265,7 +285,7 @@ public class ClientWindow extends JFrame implements Runnable {
     }
 
     private void listen() {
-        listen = new Thread("Listen") {
+        new Thread("Listen") {
             @Override
             public void run() {
                 while (running) {
@@ -275,10 +295,12 @@ public class ClientWindow extends JFrame implements Runnable {
                         connected = true;
                         client.setID(Integer.parseInt(message.substring(3, message.length())));
                         txtMessage.setEditable(true);
-                        console("Successfully connected to the server ID: " + client.getID());
+                        console("Successfully connected to the server ID: " + client.getID(), false);
                     } else if (message.startsWith("/m/")) {
                         String text = message.substring(3);
-                        console(text);
+                        String[] strings = text.split(":", 2);
+                        console(strings[0] + ":", true);
+                        console(strings[1], false);
                     } else if (message.startsWith("/s/")) {
                         send("/s/" + client.getID(), false);
                         //System.out.println("ping");
@@ -290,7 +312,8 @@ public class ClientWindow extends JFrame implements Runnable {
                         }
                         //System.out.println(message);
                         String[] sticker = message.split("/n/");
-                        console(sticker[1] + ":");
+                        console(sticker[1] + ":\n\r", true);
+                        //console(sticker[1] + ":", false);
                         try {
                             Thread.sleep(10);
                         } catch (InterruptedException e) {
@@ -306,13 +329,12 @@ public class ClientWindow extends JFrame implements Runnable {
                         history.setCaretPosition(history.getDocument().getLength());
                         txtMessage.requestFocusInWindow();
                     } else if (message.startsWith("/h/")) {
-                        console(message.substring(3, message.length()) + " successfully connected to the server");
+                        console(message.substring(3, message.length()), true);
+                        console(" successfully connected to the server", false);
                     } else if (message.startsWith("/k/")) {
-                        Style style;
-                        style = context.getStyle(StyleContext.DEFAULT_STYLE);
-                        StyleConstants.setForeground(style, Color.RED);
+                        StyleConstants.setForeground(styleText, Color.RED);
                         String text = message.substring(3);
-                        console(text);
+                        console(text, false);
                         txtMessage.setText("See ya...");
                         txtMessage.setEditable(false);
                     } else if (message.startsWith("/u/")) {
@@ -323,8 +345,7 @@ public class ClientWindow extends JFrame implements Runnable {
                 }
             }
 
-        };
-        listen.start();
+        }.start();
     }
 
     @Override

@@ -19,10 +19,6 @@ public class Server implements Runnable {
     // <1000 problems
     private int port;
     private boolean running = false;
-    private Thread run;
-    private Thread manage;
-    private Thread send;
-    private Thread receive;
 
     private final int MAX_ATTEMPTS = 5;
 
@@ -36,8 +32,7 @@ public class Server implements Runnable {
         } catch (SocketException e) {
             e.printStackTrace();
         }
-        run = new Thread(this, "Server");
-        run.start();
+        new Thread(this, "Server").start();
     }
 
     public void run() {
@@ -90,7 +85,7 @@ public class Server implements Runnable {
         System.out.println("/clients - show clients list");
         System.out.println("/kick [name OR id] - kick client with this name or id");
         System.out.println("/help - show help message");
-        System.out.println("/quit - shut down he server");
+        System.out.println("/quit - shut down the server");
         System.out.println("--------------------------------");
     }
 
@@ -138,7 +133,7 @@ public class Server implements Runnable {
     }
 
     private void manageClients() {
-        manage = new Thread("Manage") {
+        new Thread("Manage") {
             @Override
             public void run() {
                 while (running) {
@@ -171,9 +166,7 @@ public class Server implements Runnable {
 
                 }
             }
-        };
-
-        manage.start();
+        }.start();
     }
 
     // connected users
@@ -195,7 +188,7 @@ public class Server implements Runnable {
 
     private void receive() {
 
-        receive = new Thread("Receive") {
+        new Thread("Receive") {
             @Override
             public void run() {
 
@@ -217,8 +210,7 @@ public class Server implements Runnable {
                     //System.out.println(clients.get(0).address + ":" + clients.get(0).port);
                 }
             }
-        };
-        receive.start();
+        }.start();
 
     }
 
@@ -319,7 +311,7 @@ public class Server implements Runnable {
 
     private void send(byte[] data, InetAddress address, int port) {
 
-        send = new Thread("Send") {
+        new Thread("Send") {
 
             @Override
             public void run() {
@@ -332,9 +324,8 @@ public class Server implements Runnable {
                 }
             }
 
-        };
+        }.start();
 
-        send.start();
     }
 
     private void sendToAll(String message) {
