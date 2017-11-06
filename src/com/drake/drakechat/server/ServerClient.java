@@ -2,14 +2,14 @@ package com.drake.drakechat.server;
 
 import java.net.InetAddress;
 
-public class ServerClient {
+class ServerClient {
 
     String name;
     InetAddress address;
     int port;
     private final int ID;
     // amount of unsuccess tries
-    public int attempt = 0;
+    int attempt = 0;
 
 
     ServerClient(String name, InetAddress address, int port, final int ID) {

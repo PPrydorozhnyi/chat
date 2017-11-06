@@ -5,21 +5,20 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 /**
- * Created by drake on 12/10/17.
+ * online users frame
  */
-public class OnlineUsers extends JFrame {
+class OnlineUsers extends JFrame {
 
-    private JPanel contentPane;
     private JList list;
 
-    public OnlineUsers() {
+    OnlineUsers() {
         setType(Type.UTILITY);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(200, 320);
         setMinimumSize(new Dimension(200, 300));
         setTitle("Online users");
         setLocationRelativeTo(null);
-        contentPane = new JPanel();
+        JPanel contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
         GridBagLayout gbl_contentPane = new GridBagLayout();
@@ -40,7 +39,7 @@ public class OnlineUsers extends JFrame {
         list.setFont(new Font("Comic Sans MS", Font.PLAIN, 14));
     }
 
-    public void update(String[] users) {
+    void update(String[] users) {
         list.setListData(users);
     }
 }

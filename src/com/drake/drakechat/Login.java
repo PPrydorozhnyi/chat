@@ -10,12 +10,8 @@ import java.awt.event.KeyEvent;
 
 public class Login extends JFrame {
 
-    private static final long serialVersionUID = 1L;
-    private JPanel contentPane;
     private JTextField txtName;
     private JTextField txtAddress;
-    private JLabel lblAddress;
-    private JLabel lblPort;
     private JLabel lblTry;
     private JTextField txtPort;
 
@@ -32,7 +28,7 @@ public class Login extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(300, 380);
         setLocationRelativeTo(null);
-        contentPane = new JPanel();
+        JPanel contentPane = new JPanel();
         contentPane.setName("");
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
@@ -82,11 +78,11 @@ public class Login extends JFrame {
         contentPane.add(txtAddress);
         txtAddress.setColumns(10);
 
-        lblAddress = new JLabel("Address:");
+        JLabel lblAddress = new JLabel("Address:");
         lblAddress.setBounds(115, 117, 70, 15);
         contentPane.add(lblAddress);
 
-        lblPort = new JLabel("Port:");
+        JLabel lblPort = new JLabel("Port:");
         lblPort.setBounds(129, 193, 41, 15);
         contentPane.add(lblPort);
 

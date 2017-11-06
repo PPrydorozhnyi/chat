@@ -26,7 +26,6 @@ public class ClientWindow extends JFrame implements Runnable {
     private OnlineUsers users;
 
     private StyledDocument document;
-    private StyleContext context;
     private Stickers stickers;
     private StickerWindow stickerWindow;
 
@@ -75,7 +74,6 @@ public class ClientWindow extends JFrame implements Runnable {
     }
 
 
-    //TODO: font for text (windows sucks)
     private void createWindow() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -112,6 +110,7 @@ public class ClientWindow extends JFrame implements Runnable {
                 String disconnect = "/d/" + client.getID();
                 send(disconnect, false);
                 running = false;
+                client.close();
                 System.exit(0);
             }
         });
@@ -124,7 +123,7 @@ public class ClientWindow extends JFrame implements Runnable {
         gbl_contentPane.rowHeights = new int[]{20, 430, 50}; // SUM = 500
         contentPane.setLayout(gbl_contentPane);
 
-        context = new StyleContext();
+        StyleContext context = new StyleContext();
         document = new DefaultStyledDocument(context);
 
         //JTextPane textPane = new JTextPane(document);
@@ -248,7 +247,7 @@ public class ClientWindow extends JFrame implements Runnable {
         }
     }
 
-    public void sendSticker(String sticker) {
+    void sendSticker(String sticker) {
         try {
             Thread.sleep(10);
         } catch (InterruptedException e1) {

@@ -290,16 +290,16 @@ public class Server implements Runnable {
 
         switch (status) {
             case CORRECT:
-                message = "Client " + c.name + " (" + c.getID() + ")" +
-                        c.address + ":" + c.port + " disconnected";
+                message = "Client " + c.name + /*" (" + c.getID() + ")" +
+                        c.address + ":" + c.port + */" disconnected";
                 break;
             case INCORRECT:
-                message = "Client " + c.name + " (" + c.getID() + ")" +
-                        c.address + ":" + c.port + " timed out";
+                message = "Client " + c.name + /*" (" + c.getID() + ")" +
+                        c.address + ":" + c.port + */" timed out";
                 break;
             case KICKED:
-                message = "Client " + c.name + " (" + c.getID() + ")" +
-                        c.address + ":" + c.port + " kicked";
+                message = "Client " + c.name + /*" (" + c.getID() + ")" +
+                        c.address + ":" + c.port + */" kicked";
                 try {
                     send("/k/You have been kicked from this server".getBytes("UTF-8"), c.address, c.port);
                 } catch (UnsupportedEncodingException e) {

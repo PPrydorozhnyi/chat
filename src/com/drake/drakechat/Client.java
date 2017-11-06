@@ -5,7 +5,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.*;
 
 class Client {
-    private static final long serialVersionUID = 1L;
 
     private String name;
 
@@ -33,13 +32,13 @@ class Client {
         return name;
     }
 
-    public String getAddress() {
-        return address;
-    }
+//    public String getAddress() {
+//        return address;
+//    }
 
-    public int getPort() {
-        return port;
-    }
+//    public int getPort() {
+//        return port;
+//    }
 
     boolean openConnection(String address) {
 
@@ -76,7 +75,7 @@ class Client {
 
     }
 
-    public void close() {
+    void close() {
         new Thread(() -> {
             // no one can access socket
             synchronized (socket)
@@ -110,11 +109,11 @@ class Client {
         return message;
     }
 
-    public int getID() {
+    int getID() {
         return ID;
     }
 
-    public void setID(int ID) {
+    void setID(int ID) {
         this.ID = ID;
     }
 }

@@ -6,13 +6,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by drake on 22/10/17.
+ * Stickers loader
  */
-public class Stickers {
+class Stickers {
     private static Stickers ourInstance;
     private Map<String, Icon> icons;
 
-    public static Stickers getInstance() {
+    static Stickers getInstance() {
         if (ourInstance == null)
             ourInstance = new Stickers();
 
@@ -36,11 +36,11 @@ public class Stickers {
         icons.put(name, icon);
     }
 
-    public Icon getIcon(String name) {
+    Icon getIcon(String name) {
         return icons.get(name);
     }
 
-    public void loadAll() {
+    void loadAll() {
         //load("sticker.png", "angry");
         load("kot.gif", "kot");
         load("runner.gif", "runner");

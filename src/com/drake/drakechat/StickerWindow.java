@@ -7,21 +7,21 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 /**
- * Created by drake on 06/11/17.
+ * stickers window.
  */
-public class StickerWindow extends JWindow {
+class StickerWindow extends JWindow {
     /**
      *
      */
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
 
-    public StickerWindow(ClientWindow clientWindow, Stickers stickers) {
+    StickerWindow(ClientWindow clientWindow, Stickers stickers) {
         setAlwaysOnTop(true);
         setType(Window.Type.UTILITY);
         //setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(400, 400);
-        setMinimumSize(new Dimension(200, 320));
+        setSize(420, 420);
+        setMinimumSize(new Dimension(420, 420));
         //setTitle("Stickers");
         setLocationRelativeTo(null);
         contentPane = new JPanel();

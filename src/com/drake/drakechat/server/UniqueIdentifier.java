@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class UniqueIdentifier {
+class UniqueIdentifier {
 
-    private static List<Integer> IDS = new ArrayList<Integer>();
+    private static List<Integer> IDS = new ArrayList<>();
     private static final int RANGE = 10000;
 
     private static int INDEX = 0;
@@ -22,7 +22,7 @@ public class UniqueIdentifier {
 
     //TODO return index when client disconnects
 
-    public static int getIdentifier() {
+    static int getIdentifier() {
 
         if (INDEX > IDS.size() - 1) INDEX = 0;
 
