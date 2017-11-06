@@ -19,6 +19,10 @@ public class Server implements Runnable {
     // <1000 problems
     private int port;
     private boolean running = false;
+    private Thread run;
+    private Thread manage;
+    private Thread send;
+    private Thread receive;
 
     private final int MAX_ATTEMPTS = 5;
 
@@ -32,7 +36,8 @@ public class Server implements Runnable {
         } catch (SocketException e) {
             e.printStackTrace();
         }
-        new Thread(this, "Server").start();
+        run = new Thread(this, "Server");
+        run.start();
     }
 
     public void run() {
@@ -133,7 +138,7 @@ public class Server implements Runnable {
     }
 
     private void manageClients() {
-        new Thread("Manage") {
+        manage = new Thread("Manage") {
             @Override
             public void run() {
                 while (running) {
@@ -166,7 +171,9 @@ public class Server implements Runnable {
 
                 }
             }
-        }.start();
+        };
+
+        manage.start();
     }
 
     // connected users
@@ -188,7 +195,7 @@ public class Server implements Runnable {
 
     private void receive() {
 
-        new Thread("Receive") {
+        receive = new Thread("Receive") {
             @Override
             public void run() {
 
@@ -210,7 +217,8 @@ public class Server implements Runnable {
                     //System.out.println(clients.get(0).address + ":" + clients.get(0).port);
                 }
             }
-        }.start();
+        };
+        receive.start();
 
     }
 
@@ -311,7 +319,7 @@ public class Server implements Runnable {
 
     private void send(byte[] data, InetAddress address, int port) {
 
-        new Thread("Send") {
+        send = new Thread("Send") {
 
             @Override
             public void run() {
@@ -324,8 +332,9 @@ public class Server implements Runnable {
                 }
             }
 
-        }.start();
+        };
 
+        send.start();
     }
 
     private void sendToAll(String message) {

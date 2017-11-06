@@ -28,17 +28,17 @@ public class ClientWindow extends JFrame implements Runnable {
     private StyledDocument document;
     private StyleContext context;
     private Stickers stickers;
+    private StickerWindow stickerWindow;
 
     private Style styleName;
     private Style styleText;
 
-    private boolean firstSticker;
+    private boolean showStickers;
 
     ClientWindow(String name, String address, int port) {
         client = new Client(name, address, port);
 
         boolean connect = client.openConnection(address);
-        firstSticker = true;
 
         if (!connect) {
             System.out.println("Connection failed!");
@@ -49,6 +49,10 @@ public class ClientWindow extends JFrame implements Runnable {
         console("Attempting a connection to " + address + ": " + port + ", user: " + name, false);
 
         users = new OnlineUsers();
+        stickers = Stickers.getInstance();
+        stickers.loadAll();
+        stickerWindow = new StickerWindow(this, stickers);
+
 
         new Thread(this, "Running").start();
     }
@@ -122,7 +126,6 @@ public class ClientWindow extends JFrame implements Runnable {
 
         context = new StyleContext();
         document = new DefaultStyledDocument(context);
-        stickers = Stickers.getInstance();
 
         //JTextPane textPane = new JTextPane(document);
         history = new JTextPane(document);
@@ -191,14 +194,8 @@ public class ClientWindow extends JFrame implements Runnable {
                 //TODO: add ENUM to stickers
                 //String string = "\n\r";
                 //send(string, true);
-//                try {
-//                    Thread.sleep(10);
-//                } catch (InterruptedException e1) {
-//                    e1.printStackTrace();
-//                }
-                String string = "/i/angry/n/" + client.getName();
-                send(string, false);
-
+                showStickers = !showStickers;
+                stickerWindow.setVisible(showStickers);
             }
         });
         GridBagConstraints gbc_button = new GridBagConstraints();
@@ -249,6 +246,16 @@ public class ClientWindow extends JFrame implements Runnable {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+    }
+
+    public void sendSticker(String sticker) {
+        try {
+            Thread.sleep(10);
+        } catch (InterruptedException e1) {
+            e1.printStackTrace();
+        }
+        String string = "/i/" + sticker + "/n/" + client.getName();
+        send(string, false);
     }
 
     private void console(String message, boolean isName) {
@@ -306,10 +313,6 @@ public class ClientWindow extends JFrame implements Runnable {
                         //System.out.println("ping");
                     } else if (message.startsWith("/i/")) {
 
-                        if (firstSticker) {
-                            stickers.loadAll();
-                            firstSticker = false;
-                        }
                         //System.out.println(message);
                         String[] sticker = message.split("/n/");
                         console(sticker[1] + ":\n\r", true);
