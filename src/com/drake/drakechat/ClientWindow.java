@@ -180,6 +180,7 @@ public class ClientWindow extends JFrame implements Runnable {
         txtMessage.setEditable(false);
 
         JButton btnSend = new JButton("Send");
+        btnSend.setFont(new Font("Comic Sans MS", Font.PLAIN, 14));
         btnSend.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 send(txtMessage.getText(), true);
@@ -187,13 +188,14 @@ public class ClientWindow extends JFrame implements Runnable {
         });
 
         JButton smileButton = new JButton("\u263A");
+        smileButton.setFont(smileButton.getFont().deriveFont(14));
         smileButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //TODO: add ENUM to stickers
                 //String string = "\n\r";
                 //send(string, true);
-                showStickers = !showStickers;
+                setShowStickers();
                 stickerWindow.setVisible(showStickers);
             }
         });
@@ -255,6 +257,10 @@ public class ClientWindow extends JFrame implements Runnable {
         }
         String string = "/i/" + sticker + "/n/" + client.getName();
         send(string, false);
+    }
+
+    public void setShowStickers() {
+        showStickers = !showStickers;
     }
 
     private void console(String message, boolean isName) {

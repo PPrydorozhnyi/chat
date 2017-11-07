@@ -40,6 +40,7 @@ class StickerWindow extends JWindow {
             @Override
             public void mouseClicked(MouseEvent e) {
                 clientWindow.sendSticker("kot");
+                clientWindow.setShowStickers();
                 dispose();
             }
         });
@@ -55,6 +56,7 @@ class StickerWindow extends JWindow {
             @Override
             public void mouseClicked(MouseEvent e) {
                 clientWindow.sendSticker("runner");
+                clientWindow.setShowStickers();
                 dispose();
             }
         });
@@ -70,6 +72,7 @@ class StickerWindow extends JWindow {
             @Override
             public void mouseClicked(MouseEvent e) {
                 clientWindow.sendSticker("robot");
+                clientWindow.setShowStickers();
                 dispose();
             }
         });
@@ -85,6 +88,7 @@ class StickerWindow extends JWindow {
             @Override
             public void mouseClicked(MouseEvent e) {
                 clientWindow.sendSticker("ridin");
+                clientWindow.setShowStickers();
                 dispose();
             }
         });
@@ -100,6 +104,7 @@ class StickerWindow extends JWindow {
             @Override
             public void mouseClicked(MouseEvent e) {
                 clientWindow.sendSticker("walk");
+                clientWindow.setShowStickers();
                 dispose();
             }
         });
@@ -115,6 +120,7 @@ class StickerWindow extends JWindow {
             @Override
             public void mouseClicked(MouseEvent e) {
                 clientWindow.sendSticker("hi");
+                clientWindow.setShowStickers();
                 dispose();
             }
         });
@@ -130,6 +136,7 @@ class StickerWindow extends JWindow {
             @Override
             public void mouseClicked(MouseEvent e) {
                 clientWindow.sendSticker("fish");
+                clientWindow.setShowStickers();
                 dispose();
             }
         });
@@ -145,6 +152,7 @@ class StickerWindow extends JWindow {
             @Override
             public void mouseClicked(MouseEvent e) {
                 clientWindow.sendSticker("kot2");
+                clientWindow.setShowStickers();
                 dispose();
             }
         });
@@ -160,6 +168,7 @@ class StickerWindow extends JWindow {
             @Override
             public void mouseClicked(MouseEvent e) {
                 clientWindow.sendSticker("komp");
+                clientWindow.setShowStickers();
                 dispose();
             }
         });
