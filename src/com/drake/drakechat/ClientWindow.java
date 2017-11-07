@@ -197,6 +197,7 @@ public class ClientWindow extends JFrame implements Runnable {
                 //send(string, true);
                 setShowStickers();
                 stickerWindow.setVisible(showStickers);
+                stickerWindow.updateLocation();
             }
         });
         GridBagConstraints gbc_button = new GridBagConstraints();

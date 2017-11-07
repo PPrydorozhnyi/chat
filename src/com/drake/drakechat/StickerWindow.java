@@ -10,21 +10,22 @@ import java.awt.event.MouseEvent;
  * stickers window.
  */
 class StickerWindow extends JWindow {
-    /**
-     *
-     */
+
     private static final long serialVersionUID = 1L;
-    private JPanel contentPane;
+    private ClientWindow clientWindow;
 
     StickerWindow(ClientWindow clientWindow, Stickers stickers) {
+
+        this.clientWindow = clientWindow;
+
         setAlwaysOnTop(true);
         setType(Window.Type.UTILITY);
         //setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(420, 420);
         setMinimumSize(new Dimension(420, 420));
         //setTitle("Stickers");
-        setLocationRelativeTo(null);
-        contentPane = new JPanel();
+        setLocationRelativeTo(clientWindow);
+        JPanel contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
         GridBagLayout gbl_contentPane = new GridBagLayout();
@@ -178,5 +179,9 @@ class StickerWindow extends JWindow {
         contentPane.add(lblNewLabel_8, gbc_lblNewLabel_8);
 
 
+    }
+
+    void updateLocation() {
+        setLocationRelativeTo(clientWindow);
     }
 }
