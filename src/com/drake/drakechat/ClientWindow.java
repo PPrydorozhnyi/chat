@@ -32,6 +32,8 @@ public class ClientWindow extends JFrame implements Runnable {
     private Style styleName;
     private Style styleText;
 
+    private AboutWindow about;
+
     private boolean showStickers;
 
     ClientWindow(String name, String address, int port) {
@@ -103,6 +105,16 @@ public class ClientWindow extends JFrame implements Runnable {
             }
         });
         mnFile.add(mntmOnlineUsers);
+
+        JMenuItem mntmAbout = new JMenuItem("About");
+        mntmAbout.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (about == null)
+                    about = new AboutWindow();
+                about.setVisible(true);
+            }
+        });
+        mnFile.add(mntmAbout);
 
         JMenuItem mntmExit = new JMenuItem("Exit");
         mntmExit.addActionListener(new ActionListener() {
